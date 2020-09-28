@@ -20,7 +20,7 @@ from net import unet
 
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
-test_images_path = './data/test/'
+test_images_path = './data/test/1663535/'
 predictions_path = './predictions/'
 
 gpu = '0'
@@ -28,6 +28,8 @@ gpu = '0'
 
 def predict(mean=30.0, std=50.0):
     # load and normalize data
+
+
     if mean == 0.0 and std == 1.0:
         imgs_train, _, _ = load_data(train_images_path)
         mean = np.mean(imgs_train)
