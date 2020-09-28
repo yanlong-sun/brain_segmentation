@@ -18,10 +18,6 @@ pred_sorted  = zeros(size(pred));
 image_sorted = zeros(size(image));
 %mask_sorted = zeros(size(mask));
 
-% pred_sorted  = zeros(153, 256, 256);
-% image_sorted = zeros(153, 256, 256, 3);
-% mask_sorted = zeros(153, 256, 256);
-
 [name_sorted, index] = sort(name_num);
 
 for i = 1 : length(index)
@@ -30,11 +26,11 @@ for i = 1 : length(index)
     %mask_sorted(i, :, :) = mask(index(i), :, :);
 end
 
-pred_nii = make_nii(pred_sorted);
-image_nii = make_nii(image_sorted);
-mask_nii = make_nii(mask_sorted);
-
-save_nii(pred_nii, '../nii/pred.nii')
-save_nii(image_nii, '../nii/image.nii')
-save_nii(mask_nii, '../nii/mask.nii')
+v_orig = load_nii('../test_data_nii/1663535.nii.gz');
+v2 = v_orig;
+v3 = v_orig;
+v2.img = image;
+v3.img = pred;
+save_nii(v2, '../predictions/1663535/image.nii');
+save_nii(v3, '../predictions/1663535/pred.nii');
 
