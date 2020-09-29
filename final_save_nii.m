@@ -19,7 +19,7 @@ image_sorted = zeros(size(image));
 [name_sorted, index] = sort(name_num);
 
 for i = 1 : length(index)
-    pred_sorted(:, :, i) = pred(index(i), :, :);
+    pred_sorted(i, :, :) = pred(index(i), :, :);
 end
 
 
@@ -37,7 +37,6 @@ for i = 3: length(slicefileNames)
     
     for j = 2 : length(index)
         single_slice = imread([slices_dir_path, slices_list(index(j)).name]);
-        [slices_dir_path, slices_list(index(j)).name]
         single_slice = imcrop(single_slice, [1, 64, 255, 127]);
         slices = cat(3, slices, single_slice);
     end

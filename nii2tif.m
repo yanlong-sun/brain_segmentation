@@ -1,8 +1,6 @@
 clc;
 clear;
 v_orig = load_nii('../test_data_nii/1663535.nii.gz');
-
-
 v = v_orig.img;
 [n1,n2,n3] = size(v); 
 for i = 1 : n3

@@ -1,10 +1,23 @@
 clc;
 clear;
 
-test_data_tif_path = '../../test_data_tif/';     
+v_orig = load_nii('../../test_data_nii/1663535.nii.gz');
+test_data_tif_path = '../../test_data_tif/'; 
 
+slice_number_long = 10000;
+v = v_orig.img;
+[n1,n2,n3] = size(v); 
+for i = 1 : n3
+    save_path = [test_data_tif_path, '1663535/', '1663535_', num2str(slice_number_long + i), '.tif'];
+    imwrite(v(:,:,i), save_path);
+end
+
+    
 slicedirOutput=dir(test_data_tif_path);
 slicefileNames={slicedirOutput.name};
+
+
+
 
 % sorted in the original nii order
 mat = load('../../predictions/1663535/predictions.mat');   
@@ -15,6 +28,9 @@ for j = 1 : name_size(1)
     name_num(j) = str2double(name(j, 9:11));
 end
 [name_sorted, index] = sort(name_num);
+
+
+
 
 % 'cat' all sorted slices into one volume
 for i = 4: length(slicefileNames)
