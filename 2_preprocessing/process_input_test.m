@@ -7,7 +7,6 @@ slicedirOutput=dir(test_data_tif_path);
 slicefileNames={slicedirOutput.name};
 
 mat = load('../../predictions/1663535/predictions.mat');
-
 name = mat.name;
 name_size = size(name);
 name_num = zeros(1, name_size(1));
