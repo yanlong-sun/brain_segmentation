@@ -3,27 +3,6 @@ clear;
 
 mat = load('../predictions/1663535/predictions.mat');
 
-%% Pred Part
-pred = mat.pred;
-pred_nii = make_nii(pred);
-pred_img2 = pred_nii.img;
-[n1,n2,n3] = size(pred_img2);
-pred_img = zeros(size(pred_img2));
-
-slice_number_long = 10000;
-for j = 1 : n1
-    pred_img(:, :, j) = pred_img2(j, :, :);
-    save_path = ['../predictions/1663535/test/', num2str(slice_number_long + i), '.png'];
-    imwrite(pred_img( :,:, j), save_path);
-    if j == 1
-        preds = imread(save_path);
-        preds = imcrop(preds, [1, 64, 255, 127]);
-    end
-    single_pred = imread(save_path);
-    single_pred = imcrop(single_pred, [1, 64, 255, 127]);
-    imshow(single_pred)
-    preds = cat(3, preds, single_pred);
-end
 
 %% Original Image Part
 test_data_tif_path = './data/test/';     
@@ -45,9 +24,27 @@ for i = 4: length(slicefileNames)
     end
 end
 
-%% 
+%% Pred Part
+pred = mat.pred;
+pred_nii = make_nii(pred);   % this nii file has the wrong head
+pred_nii_img = pred_nii.img;
+[n1,n2,n3] = size(pred_nii_img);
+slice_number_long = 10000;
+for j = 1 : n1
+    pred_img(:, :, j) = pred_nii_img(j, :, :);
+    if j == 1
+        preds = mat2gray(pred_img(:, :, j));
+        imshow(preds)
+        preds = imcrop(preds, [1, 64, 255, 127]);
+    end
+    single_pred = mat2gray(pred_img(:, :, j));
+    single_pred = imcrop(single_pred, [1, 64, 255, 127]);
+    imshow(single_pred)
+    preds = cat(3, preds, single_pred);
+end
 
 
+%% SAVE part
 v_orig = load_nii('../test_data_nii/1663535.nii.gz');
 v2 = v_orig;
 v3 = v_orig;
