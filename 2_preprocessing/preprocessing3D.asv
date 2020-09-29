@@ -97,8 +97,8 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
         imageSlices = slices(:, :, startSlice:(startSlice + slicesPerImage - 1));
         maskSlices = mask(:, :, startSlice:(startSlice + slicesPerImage - 1));
 
-        saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '.tif']);
-        saveastiff(maskSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '_mask.tif']);
+        saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long+startSlice) '.tif']);
+        saveastiff(maskSlices, [destination_path prefix '_' num2str(startSlice) '_mask.tif']);
     end
 
 end
