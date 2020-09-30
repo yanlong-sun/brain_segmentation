@@ -106,9 +106,17 @@ end
 
 function [ image ] = center_crop( image, cropSize )
 %CENTER_CROP Center crop of given size
+    image_size = size(image);
+    if image_size(1) < image_size(2)+60
+        image = padarray(image,[80,0],'post');
+        image = padarray(image,[80,0],'pre');
+    end
     
-    image = padarray(image,[80,0],'post');
-    image = padarray(image,[80,0],'pre');
+    if image_size(2) < image_size(1)+60
+        image = padarray(image,[0,80],'post');
+        image = padarray(image,[0,80],'pre');
+    end
+    
     
     [p3, p4, ~] = size(image);
 

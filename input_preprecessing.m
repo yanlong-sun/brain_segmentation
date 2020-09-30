@@ -1,33 +1,37 @@
 clc;
 clear;
 
-v_orig = load_nii('../../test_data_nii/1663535.nii.gz');
-test_data_tif_path = '../../test_data_tif/'; 
+test_data_nii_path = '../test_data_nii/';
+test_data_tif_path = '../test_data_tif/';
 
 slice_number_long = 10000;
-v = v_orig.img;
-[n1,n2,n3] = size(v); 
-for i = 1 : n3
-    save_path = [test_data_tif_path, '1663535/', '1663535_', num2str(slice_number_long + i), '.tif'];
-    imwrite(v(:,:,i), save_path);
-end
 
-    
-slicedirOutput=dir(test_data_tif_path);
-slicefileNames={slicedirOutput.name};
+nii_folder=dir(test_data_nii_path);
+nii_file={nii_folder.name};
 
-% 'cat' all sorted slices into one volume
-for i = 4: length(slicefileNames)
-    slices_case_name = char(string(slicefileNames(i)));  
-    slices_dir_path = [test_data_tif_path, slices_case_name, '/'];
-    slices_list = dir(strcat(slices_dir_path,'*.tif')); 
-    slices = imread([slices_dir_path, slices_list(i).name]);
+for num_nii = 4 : length(nii_file)
+    case_name = nii_file(num_nii);
+    case_name = char(case_name);
+    case_name = case_name(1 : end-7);    
+
+    v_orig = load_nii([test_data_nii_path, case_name, '.nii.gz']);    
+    mkdir(test_data_tif_path, case_name);
     
-    for j = 2 : length(slices_list)
-        single_slice = imread([slices_dir_path, slices_list(j).name]);
-        slices = cat(3, slices, single_slice);
+    v = v_orig.img;
+    [n1,n2,n3] = size(v); 
+    for i = 1 : n3
+        save_path = [test_data_tif_path, case_name,'/' case_name,'_', num2str(slice_number_long + i), '.tif'];
+        imwrite(uint16(v(:,:,i)), save_path);
+        if i == 1
+            slices = imread(save_path);
+        else
+            single_slice = imread(save_path);
+            figure(3)
+            imshow(uint8(single_slice))
+            slices = cat(3, slices, single_slice);     
+        end   
     end
+
+    destination_path = ['./data/test/', case_name, '/'];
+    [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, zeros(size(slices)), destination_path, case_name);
 end
-   
-destination_path = ['../data/test/', slices_case_name, '/'];
-[slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, zeros(size(slices)), destination_path, slices_case_name);
