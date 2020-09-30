@@ -21,14 +21,12 @@ from net import unet
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
 test_dir_path = './data/test/'
-
+predictions_path = './data/pred'
 gpu = '0'
 
 
 def predict(mean=30.0, std=50.0):
     # load and normalize data
-
-
     if mean == 0.0 and std == 1.0:
         imgs_train, _, _ = load_data(train_images_path)
         mean = np.mean(imgs_train)
@@ -59,104 +57,6 @@ def predict(mean=30.0, std=50.0):
     }
     savemat(os.path.join(predictions_path, 'predictions.mat'), matdict)
 
-    # save images with segmentation and ground truth mask overlay
-    for i in range(len(imgs_test)):
-        pred = imgs_mask_pred[i]
-        image = original_imgs_test[i]
-        mask = imgs_mask_test[i]
-
-        # segmentation mask is for the middle slice
-        image_rgb = gray2rgb(image[:, :, 1])
-
-        # prediction contour image
-        pred = (np.round(pred[:, :, 0]) * 255.0).astype(np.uint8)
-        pred, contours, _ = cv2.findContours(
-            pred, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        pred = np.zeros(pred.shape)
-        cv2.drawContours(pred, contours, -1, (255, 0, 0), 1)
-
-        # ground truth contour image
-        mask = (np.round(mask[:, :, 0]) * 255.0).astype(np.uint8)
-        mask, contours, _ = cv2.findContours(
-            mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        mask = np.zeros(mask.shape)
-        cv2.drawContours(mask, contours, -1, (255, 0, 0), 1)
-
-        # combine image with contours
-        pred_rgb = np.array(image_rgb)
-        annotation = pred_rgb[:, :, 1]
-        annotation[np.maximum(pred, mask) == 255] = 0
-        pred_rgb[:, :, 0] = pred_rgb[:, :, 1] = pred_rgb[:, :, 2] = annotation
-        pred_rgb[:, :, 2] = np.maximum(pred_rgb[:, :, 2], mask)
-        pred_rgb[:, :, 0] = np.maximum(pred_rgb[:, :, 0], pred)
-
-        imsave(os.path.join(predictions_path,
-                            names_test[i] + '.png'), pred_rgb)
-
-    return imgs_mask_test, imgs_mask_pred, names_test
-
-
-def evaluate(imgs_mask_test, imgs_mask_pred, names_test):
-    test_pred = zip(imgs_mask_test, imgs_mask_pred)
-    name_test_pred = zip(names_test, test_pred)
-    name_test_pred.sort(key=lambda x: x[0])
-
-    patient_ids = []
-    dc_values = []
-
-    i = 0  # start slice index
-    for p in range(len(name_test_pred)):
-        # get case id (names are in format <case_id>_<slice_number>)
-        p_id = '_'.join(name_test_pred[p][0].split('_')[:-1])
-
-        # if this is the last slice for the processed case
-        if p + 1 >= len(name_test_pred) or p_id not in name_test_pred[p + 1][0]:
-            # ground truth segmentation:
-            p_slices_mask = np.array(
-                [im_m[0] for im_id, im_m in name_test_pred[i:p + 1]])
-            # predicted segmentation:
-            p_slices_pred = np.array(
-                [im_m[1] for im_id, im_m in name_test_pred[i:p + 1]])
-
-            patient_ids.append(p_id)
-            dc_values.append(dice_coefficient(p_slices_pred, p_slices_mask))
-            print(p_id + ':\t' + str(dc_values[-1]))
-
-            i = p + 1
-
-    return dc_values, patient_ids
-
-
-def dice_coefficient(prediction, ground_truth):
-    prediction = np.round(prediction).astype(int)
-    ground_truth = np.round(ground_truth).astype(int)
-    return np.sum(prediction[ground_truth == 1]) * 2.0 / (np.sum(prediction) + np.sum(ground_truth))
-
-
-def gray2rgb(im):
-    w, h = im.shape
-    ret = np.empty((w, h, 3), dtype=np.uint8)
-    ret[:, :, 2] = ret[:, :, 1] = ret[:, :, 0] = im
-    return ret
-
-
-def plot_dc(labels, values):
-    y_pos = np.arange(len(labels))
-
-    fig = plt.figure(figsize=(12, 8))
-    plt.barh(y_pos, values, align='center', alpha=0.5)
-    plt.yticks(y_pos, labels)
-    plt.xticks(np.arange(0.5, 1.0, 0.05))
-    plt.xlabel('Dice coefficient', fontsize='x-large')
-    plt.axes().xaxis.grid(color='black', linestyle='-', linewidth=0.5)
-    axes = plt.gca()
-    axes.set_xlim([0.5, 1.0])
-    plt.tight_layout()
-    axes.axvline(np.mean(values), color='green', linewidth=2)
-
-    plt.savefig('DSC.png', bbox_inches='tight')
-    plt.close(fig)
-
 
 if __name__ == '__main__':
 
@@ -171,20 +71,15 @@ if __name__ == '__main__':
 
     for root, dirs, files in os.walk(test_dir_path):
         for dir in dirs:
-            print(os.path.join(root, dir, '/'))
-            print(os.path.join('./predictions/', dir, '/'))
+            print(root + dir + '/')
+            print('./predictions/' +  dir + '/')
             print()
             test_images_path = os.path.join(root, dir, '/')
             predictions_path = os.path.join('./predictions/', dir, '/')
 
             with tf.device(device):
-                imgs_mask_test, imgs_mask_pred, names_test = predict()
-                values, labels = evaluate(imgs_mask_test, imgs_mask_pred, names_test)
+                predict()
 
-            print('\nAverage DSC: ' + str(np.mean(values)))
-
-            # plot results
-            plot_dc(labels, values)
 
 
 
