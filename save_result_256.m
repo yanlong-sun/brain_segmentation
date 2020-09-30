@@ -6,7 +6,7 @@ test_data_tif_path = '../test_data_tif/';
 pred_folder= dir(prediction_path);
 pred_file={pred_folder.name};
 
-for num_pred= 5 : 7
+for num_pred= 4 : length(pred_file)
     case_name = pred_file(num_pred);
     case_name = char(case_name);
     mat = load([prediction_path, case_name, '/predictions.mat']);
