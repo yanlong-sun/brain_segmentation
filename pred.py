@@ -21,7 +21,6 @@ from net import unet
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
 test_dir_path = './data/test/'
-predictions_path = './data/pred'
 gpu = '0'
 
 
