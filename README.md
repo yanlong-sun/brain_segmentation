@@ -15,3 +15,11 @@ Step_4:  convert .mat format to .nii
 		
 		
 * training on  "CC-359"      CC0001 - CC0030
+
+
+
+problem:
+
+when one of the  original dimension  > 256   -> error
+
+cannot convert back to the same size
