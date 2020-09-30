@@ -1,15 +1,15 @@
 # brain_segmentation
 
-Step_1:  convert .nii.gz format to .tif
-		'python 1_nii_to_tif.py  ../test_data_nii  ../test_data_tif'
+Step_1:  run 'input_preprocessing'
+			put all nii.gz file  in '../test_data_nii'
+			we could get test data in './data_test'
 
-Step_2:  preprocessing the slices (For testing)
-		run 'process_input_test.m'
+Step_2:    'python pred.py' 
+			prediction
 
-Step_3:  prediction(I haven't amended the code to prediction a bunch of volumes, so I need to change the 'test_image_path' to the specific path in 'data.py' )
-		'python test.py'
-
-Step_4:  convert .mat format to .nii
+Step_3:  run 'save_result_256.m'
+			convert .mat format back to .nii
+			we can get the result in './predictions'
 
 
 		
@@ -17,9 +17,3 @@ Step_4:  convert .mat format to .nii
 * training on  "CC-359"      CC0001 - CC0030
 
 
-
-problem:
-
-when one of the  original dimension  > 256   -> error
-
-cannot convert back to the same size
