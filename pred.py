@@ -171,7 +171,9 @@ if __name__ == '__main__':
 
     for root, dirs, files in os.walk(test_dir_path):
         for dir in dirs:
-            print(dir)
+            print(os.path.join(root, dir, '/'))
+            print(os.path.join('./predictions/', dir, '/'))
+            print()
             test_images_path = os.path.join(root, dir, '/')
             predictions_path = os.path.join('./predictions/', dir, '/')
 
