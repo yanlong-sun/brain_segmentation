@@ -21,6 +21,7 @@ from net import unet
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
 test_dir_path = './data/test/'
+
 gpu = '0'
 
 
@@ -54,7 +55,7 @@ def predict(mean=30.0, std=50.0):
         'mask': imgs_mask_test,
         'name': names_test
     }
-    savemat(os.path.join(predictions_path, 'predictions.mat'), matdict)
+    savemat(os.path.join(predictions_path, 'predictions.mat'),  matdict)
 
 
 if __name__ == '__main__':
