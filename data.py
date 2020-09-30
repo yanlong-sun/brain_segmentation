@@ -14,6 +14,7 @@ channels = 3    # refers to neighboring slices; if set to 3, takes previous and 
 modalities = 1  # refers to pre, flair and post modalities; if set to 3, uses all and if set to 1, only flair
 
 
+
 def load_data(path):
     """
     Assumes filenames in given path to be in the following format as defined in `preprocessing3D.m`:
@@ -48,7 +49,7 @@ def load_data(path):
         img_mask = imread(os.path.join(path, image_mask_name), as_grey=True)
 
 
-        print(image_mask_name)
+        print(image_name)
 
 
         if channels > 1:
