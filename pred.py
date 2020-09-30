@@ -20,8 +20,7 @@ from net import unet
 
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
-test_images_path = './data/test/1663535/'
-predictions_path = './predictions/'
+test_dir_path = './data/test/'
 
 gpu = '0'
 
@@ -170,7 +169,7 @@ if __name__ == '__main__':
         gpu = sys.argv[1]
     device = '/gpu:' + gpu
 
-    for root, dirs, files in os.walk(test_images_path):
+    for root, dirs, files in os.walk(test_dir_path):
         for dir in dirs:
             print(dir)
             test_images_path = os.path.join(root, dir, '/')
