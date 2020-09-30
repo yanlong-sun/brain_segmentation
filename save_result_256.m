@@ -9,7 +9,7 @@ pred_file={pred_folder.name};
 for num_pred= 5 : 7
     case_name = pred_file(num_pred);
     case_name = char(case_name);
-    mat = load([prediction_path, case_name, '/', case_name, '_predictions.mat']);
+    mat = load([prediction_path, case_name, '/predictions.mat']);
     
     %% Image Part
     test_data_path = ['./data/test/',case_name, '/']; 
