@@ -72,8 +72,8 @@ if __name__ == '__main__':
 
     for root, dirs, files in os.walk(test_images_path):
         for dir in dirs:
-            print(os.path.join(root, dir))
-
+            print(dir)
+            test_images_path = os.path.join(root, dir, '/')
             predictions_path = os.path.join('./predictions/', dir, '/')
 
             with tf.device(device):
