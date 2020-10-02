@@ -49,8 +49,6 @@ def load_data(path):
         img_mask = imread(os.path.join(path, image_mask_name), as_grey=True)
 
 
-        print(image_name)
-
 
         if channels > 1:
             img_prev = read_slice(path, patient_id, slice_number - 1)
