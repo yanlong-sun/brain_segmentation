@@ -19,22 +19,6 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     
     mask(mask ~= 0) = 1;
 
-%     % resize to have smaller dimension equal 256 pixels
-%     if min(size(slices(:, :, 1))) ~= 256
-% 
-%         scale = 256 / max(size(slices));
-%         % resize images to 256 with bicubic interpolation
-%         slices = imresize(slices, scale);
-%         % and mask with NN interpolation
-%         mask = imresize(mask, scale, 'method', 'nearest');
-% 
-%     end
-% 
-%     % center crop to 256x256 square
-%     slices = center_crop(slices, [256 256]);
-%     mask = center_crop(mask, [256 256]);
-
-
     % fill holes in segmentation mask
     for s = 1:size(mask, 3)
         mask(:, :, s) = imfill(mask(:, :, s), 'holes');
@@ -43,27 +27,27 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     % fix the rage of pixel values after bicubic interpolation
     slices(slices < 0) = 0;
 
-    % get histogram of an image volume
-    [N, edges] = histcounts(slices(:), 'BinWidth', 2);
-
-    % rescale the intensity peak to be at value 100
-    minimum = edges(find(edges > prctile(slices(:), 2), 1));
-
-    diffN = zeros(size(N));
-    for nn = 2:numel(N)
-        diffN(nn) = N(nn) / N(nn - 1);
-    end
-    s = find(edges >= prctile(slices(:), 50), 1);
-    f = find(diffN(s:end) > 1.0, 5);
-    start = s + f(5);
-
-    [~, ind] = max(N(start:end));
-    peak_val = edges(ind + start - 1);
-    maximum = minimum + ((peak_val - minimum) * 2.55);
-
-    slices(slices < minimum) = minimum;
-    slices(slices > maximum) = maximum;
-    slices = double(slices - minimum) ./ (maximum - minimum);
+%     % get histogram of an image volume
+%     [N, edges] = histcounts(slices(:), 'BinWidth', 2);
+% 
+%     % rescale the intensity peak to be at value 100
+%     minimum = edges(find(edges > prctile(slices(:), 2), 1));
+% 
+%     diffN = zeros(size(N));
+%     for nn = 2:numel(N)
+%         diffN(nn) = N(nn) / N(nn - 1);
+%     end
+%     s = find(edges >= prctile(slices(:), 50), 1);
+%     f = find(diffN(s:end) > 1.0, 5);
+%     start = s + f(5);
+% 
+%     [~, ind] = max(N(start:end));
+%     peak_val = edges(ind + start - 1);
+%     maximum = minimum + ((peak_val - minimum) * 2.55);
+% 
+%     slices(slices < minimum) = minimum;
+%     slices(slices > maximum) = maximum;
+%     slices = double(slices - minimum) ./ (maximum - minimum);
 
     % save preprocessed images
     slices = im2uint8(slices);
