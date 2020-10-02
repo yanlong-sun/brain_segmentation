@@ -21,13 +21,13 @@ for num_nii = 4 : length(nii_file)
     [n1,n2,n3] = size(v); 
     for i = 1 : n3
         save_path = [test_data_tif_path, case_name,'/' case_name,'_', num2str(slice_number_long + i), '.tif'];
-        imwrite(uint16(v(:,:,i)), save_path);
+        imwrite(v(:,:,i), save_path);
         if i == 1
             slices = imread(save_path);
         else
             single_slice = imread(save_path);
             figure(3)
-            imshow(uint8(single_slice))
+            imagesc(single_slice)
             slices = cat(3, slices, single_slice);     
         end   
     end
