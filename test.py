@@ -20,7 +20,7 @@ from net import unet
 
 weights_path = './weights_128.h5'
 train_images_path = './data/train/'
-test_images_path = './data/test/1663535/'
+test_images_path = './data/valid/'
 predictions_path = './predictions/'
 
 gpu = '0'
