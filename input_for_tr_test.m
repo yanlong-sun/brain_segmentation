@@ -42,6 +42,6 @@ for num_nii = 4 : length(slices_nii_file)
         end   
     end
     
-    destination_path = ['./data/test_model/', case_name, '/'];
+    destination_path = './data/test_model/';
     [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, masks, destination_path, case_name);
 end
