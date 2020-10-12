@@ -60,7 +60,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     % resize to have smaller dimension equal 256 pixels
     if min(size(slices(:, :, 1))) ~= 256
 
-        scale = 256 / max(size(slices));
+        scale = 256 / max(size(slices(:,:,1)));
         % resize images to 256 with bicubic interpolation
         slices = imresize(slices, scale);
         % and mask with NN interpolation
@@ -95,14 +95,27 @@ end
 function [ image ] = center_crop( image, cropSize )
 %CENTER_CROP Center crop of given size
     image_size = size(image);
-    if image_size(1) < image_size(2)+60
-        image = padarray(image,[80,0],'post');
-        image = padarray(image,[80,0],'pre');
-    end
-    
-    if image_size(2) < image_size(1)+60
+    if image_size(1) > image_size(2)+60
         image = padarray(image,[0,80],'post');
         image = padarray(image,[0,80],'pre');
+    end
+    
+    if and(image_size(2) < image_size(1)+60, image_size(2) > image_size(1))
+        image = padarray(image,[50,0],'post');
+        image = padarray(image,[50,0],'pre');
+    end
+    
+    if and(image_size(1) < image_size(2)+60, image_size(1) > image_size(2))
+        image = padarray(image,[0,50],'post');
+        image = padarray(image,[0,50],'pre');
+    end
+    
+    if image_size(2) > image_size(1)+60
+        image = padarray(image,[80,8],'post');
+        image = padarray(image,[80,8],'pre');
+        
+ 
+        
     end
     
     
