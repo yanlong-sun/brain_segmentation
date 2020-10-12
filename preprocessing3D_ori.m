@@ -16,8 +16,6 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
 %
 %       [slices, mask] = preprocessing3D(slices, zeros(size(slices)), '/media/username/data/train/', 'patient_001');
 
-
-    slices = double(slices);
     
     mask(mask ~= 0) = 1;
 
@@ -29,7 +27,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     % fix the rage of pixel values after bicubic interpolation
     slices(slices < 0) = 0;
 
-    % get histogram of an image volume
+% get histogram of an image volume
     [N, edges] = histcounts(slices(:), 'BinWidth', 2);
 
     % rescale the intensity peak to be at value 100
@@ -46,7 +44,6 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     [~, ind] = max(N(start:end));
     peak_val = edges(ind + start - 1);
     maximum = minimum + ((peak_val - minimum) * 2.55);
-  
 
     slices(slices < minimum) = minimum;
     slices(slices > maximum) = maximum;
@@ -72,7 +69,9 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     slices = center_crop(slices, [256 256]);
     mask = center_crop(mask, [256 256]);
     
-      
+    
+    
+    
     
     
     slicesPerImage = 1;
@@ -81,10 +80,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
         startSlice = max([1, (s - slicesPerImage + 1)]);
         imageSlices = slices(:, :, startSlice:(startSlice + slicesPerImage - 1));
         maskSlices = mask(:, :, startSlice:(startSlice + slicesPerImage - 1));
-        
-        figure(3)
-        imshow(imageSlices)
-        
+
         saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '.tif']);
         saveastiff(maskSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '_mask.tif']);
     end
@@ -117,5 +113,3 @@ function [ image ] = center_crop( image, cropSize )
     image = image(i3_start:i3_stop, i4_start:i4_stop, :);
 
 end
-
-    
