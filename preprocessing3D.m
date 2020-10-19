@@ -17,7 +17,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
 %       [slices, mask] = preprocessing3D(slices, zeros(size(slices)), '/media/username/data/train/', 'patient_001');
 
 
-    %slices = double(slices);
+    slices = double(slices);
     
     mask(mask ~= 0) = 1;
 
@@ -32,29 +32,29 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     
     
     
-%     
-%     % get histogram of an image volume
-%     [N, edges] = histcounts(slices(:), 'BinWidth', 2);
-% 
-%     % rescale the intensity peak to be at value 100
-%     minimum = edges(find(edges > prctile(slices(:), 2), 1));
-% 
-%     diffN = zeros(size(N));
-%     for nn = 2:numel(N)
-%         diffN(nn) = N(nn) / N(nn - 1);
-%     end
-%     s = find(edges >= prctile(slices(:), 50), 1);
-%     f = find(diffN(s:end) > 1.0, 5);
-%     start = s + f(5);
-% 
-%     [~, ind] = max(N(start:end));
-%     peak_val = edges(ind + start - 1);
-%     maximum = minimum + ((peak_val - minimum) * 2.55);
-%   
-% 
-%     slices(slices < minimum) = minimum;
-%     slices(slices > maximum) = maximum;
-%     slices = (slices - minimum) ./ (maximum - minimum);
+    
+    % get histogram of an image volume
+    [N, edges] = histcounts(slices(:), 'BinWidth', 2);
+
+    % rescale the intensity peak to be at value 100
+    minimum = edges(find(edges > prctile(slices(:), 2), 1));
+
+    diffN = zeros(size(N));
+    for nn = 2:numel(N)
+        diffN(nn) = N(nn) / N(nn - 1);
+    end
+    s = find(edges >= prctile(slices(:), 50), 1);
+    f = find(diffN(s:end) > 1.0, 5);
+    start = s + f(5);
+
+    [~, ind] = max(N(start:end));
+    peak_val = edges(ind + start - 1);
+    maximum = minimum + ((peak_val - minimum) * 2.55);
+  
+
+    slices(slices < minimum) = minimum;
+    slices(slices > maximum) = maximum;
+    slices = (slices - minimum) ./ (maximum - minimum);
 
     
     
