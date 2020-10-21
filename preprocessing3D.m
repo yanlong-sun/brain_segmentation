@@ -27,7 +27,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     end
    
     minimum = 2;
-    maximum = 149.9;
+    maximum = 200;
     slices = rescale(slices, minimum, maximum);
     slices = slices / 255;
 
