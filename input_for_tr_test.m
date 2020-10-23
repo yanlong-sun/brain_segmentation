@@ -16,14 +16,18 @@ slices_nii_file={slices_nii_folder.name};
 for num_nii = 4 : length(slices_nii_file)
     case_name = slices_nii_file(num_nii);
     case_name = char(case_name);
-    case_name = case_name(1 : end-7)    
-
+    case_name = case_name(1 : end-7);
+    disp(case_name)
     v_slices = load_untouch_nii([test_data_slices_nii_path, case_name, '.nii.gz']);  
     v_masks = load_untouch_nii([test_data_masks_nii_path, case_name, '.manual.mask.nii.gz']);
     mkdir(test_data_slices_tif_path, case_name);  
     mkdir(test_data_masks_tif_path, case_name); 
     slices_tif = v_slices.img;
     masks_tif = v_masks.img;
+    
+    disp(class(slices_tif))
+    max(max(max(slices_tif(:,:,:))))
+    
     [n1,n2,n3] = size(slices_tif);
       
     for i = 1 : n3 
@@ -42,6 +46,6 @@ for num_nii = 4 : length(slices_nii_file)
         end   
     end
     
-    destination_path = './data/test_model/';
-    [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, masks, destination_path, case_name);
+%     destination_path = './data/test_model/';
+%     [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, masks, destination_path, case_name);
 end

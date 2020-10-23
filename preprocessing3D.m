@@ -30,6 +30,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     
     
     
+    % get histogram of an image volume
     [N, edges] = histcounts(slices(:), 'BinWidth', 2);
 
     % rescale the intensity peak to be at value 100
@@ -46,9 +47,13 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
     [~, ind] = max(N(start:end));
     peak_val = edges(ind + start - 1);
     maximum = minimum + ((peak_val - minimum) * 2.55);
+
+    slices(slices < minimum) = minimum;
+    slices(slices > maximum) = maximum;
+    slices = (slices - minimum) ./ (maximum - minimum);
  
-    slices = rescale(slices, minimum, maximum);
-    slices = slices / 255;
+%     slices = rescale(slices, minimum, maximum);
+%     slices = slices / 255;
 
     
     
@@ -86,8 +91,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
         maskSlices = mask(:, :, startSlice:(startSlice + slicesPerImage - 1));
         
         figure(3)
-        imshow(imageSlices)
-        
+        imshow(imageSlices);
         saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '.tif']);
         saveastiff(maskSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '_mask.tif']);
     end
