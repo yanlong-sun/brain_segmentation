@@ -35,32 +35,36 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
         mask(:, :, s) = imfill(mask(:, :, s), 'holes');
     end
 %% Preprocessing slices
-    
-    slices = double(slices);
-    % fix the rage of pixel values after bicubic interpolation
-    slices(slices < 0) = 0;
+    if max(max(max(slices))) < 2000
+        slices = double(slices);
+        % fix the rage of pixel values after bicubic interpolation
+        slices(slices < 0) = 0;
 
-    % get histogram of an image volume
-    [N, edges] = histcounts(slices(:), 'BinWidth', 2);
+        % get histogram of an image volume
+        [N, edges] = histcounts(slices(:), 'BinWidth', 2);
 
-    % rescale the intensity peak to be at value 100
-    minimum = edges(find(edges > prctile(slices(:), 2), 1));
+        % rescale the intensity peak to be at value 100
+        minimum = edges(find(edges > prctile(slices(:), 2), 1));
 
-    diffN = zeros(size(N));
-    for nn = 2:numel(N)
-        diffN(nn) = N(nn) / N(nn - 1);
+        diffN = zeros(size(N));
+        for nn = 2:numel(N)
+            diffN(nn) = N(nn) / N(nn - 1);
+        end
+        s = find(edges >= prctile(slices(:), 50), 1);
+        f = find(diffN(s:end) > 1.0, 5);
+        start = s + f(5);
+
+        [~, ind] = max(N(start:end));
+        peak_val = edges(ind + start - 1);
+        maximum = minimum + ((peak_val - minimum) * 2.55);
+
+        slices(slices < minimum) = minimum;
+        slices(slices > maximum) = maximum;
+        slices = (slices - minimum) ./ (maximum - minimum);
+    else
+        slices = im2uint8(rescale(slices, 0, 1));
     end
-    s = find(edges >= prctile(slices(:), 50), 1);
-    f = find(diffN(s:end) > 1.0, 5);
-    start = s + f(5);
 
-    [~, ind] = max(N(start:end));
-    peak_val = edges(ind + start - 1);
-    maximum = minimum + ((peak_val - minimum) * 2.55);
-
-    slices(slices < minimum) = minimum;
-    slices(slices > maximum) = maximum;
-    slices = (slices - minimum) ./ (maximum - minimum);
 %%
     
     % center crop to 256x256 square
@@ -69,7 +73,7 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
 
     % save preprocessed images
     slices = im2uint8(slices);
-    mask = im2uint8(mask);
+    mask = im2uint8(mask) *255;
 
     slicesPerImage = 1;
 

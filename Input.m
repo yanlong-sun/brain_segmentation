@@ -17,7 +17,8 @@ for num_nii = 4 : length(slices_nii_file)
     case_name = slices_nii_file(num_nii);
     case_name = char(case_name);
     case_name = case_name(1 : end-7);
-    x = [(num_nii - 3)/length(slices_nii_file)*100, '%'];
+    finishing = ((num_nii - 3)/length(slices_nii_file))*100;
+    x = [num2str(round(finishing)), '%'];
     disp(x)
     
     v_slices = load_untouch_nii([test_data_slices_nii_path, case_name, '.nii.gz']);  
