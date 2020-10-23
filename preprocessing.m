@@ -35,7 +35,7 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
         mask(:, :, s) = imfill(mask(:, :, s), 'holes');
     end
 %% Preprocessing slices
-    if max(max(max(slices))) < 2000
+    if max(max(max(slices))) < 1220
         slices = double(slices);
         % fix the rage of pixel values after bicubic interpolation
         slices(slices < 0) = 0;
@@ -61,9 +61,22 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
         slices(slices < minimum) = minimum;
         slices(slices > maximum) = maximum;
         slices = (slices - minimum) ./ (maximum - minimum);
+        slices = im2uint8(slices);
     else
-        slices = im2uint8(rescale(slices, 0, 1));
+        [~,~,n3] = size(slices);
+        for i = 1 : n3 
+            if i == 1
+                slice = slices(:,:,1);
+                slice = im2uint8(rescale(slice, 0, 1));
+            else
+                single_slice = slices(:,:,i);
+                single_slice = im2uint8(rescale(single_slice, 0, 1));  
+                slice = cat(3, slice, single_slice);
+            end            
+        end
+        slices = slice;
     end
+
 
 %%
     
@@ -72,7 +85,6 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
     mask = center_crop(mask, [256 256]);
 
     % save preprocessed images
-    slices = im2uint8(slices);
     mask = im2uint8(mask) *255;
 
     slicesPerImage = 1;

@@ -177,6 +177,7 @@ if __name__ == '__main__':
     print('\nAverage DSC: ' + str(np.mean(values)))
 
     # plot results
-    np.savetxt('labels.txt', labels)
-    np.savetxt('values.txt', values)
     plot_dc(labels, values)
+
+    np.savez('label_and_value.npz', labels, values)
+
