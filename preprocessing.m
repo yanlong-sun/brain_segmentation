@@ -35,6 +35,7 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
         mask(:, :, s) = imfill(mask(:, :, s), 'holes');
     end
 %% Preprocessing slices
+
     if max(max(max(slices))) < 1220
         slices = double(slices);
         % fix the rage of pixel values after bicubic interpolation
@@ -64,6 +65,7 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
         slices = im2uint8(slices);
     else
         [~,~,n3] = size(slices);
+        slices = im2uint8(slices);
         for i = 1 : n3 
             if i == 1
                 slice = slices(:,:,1);

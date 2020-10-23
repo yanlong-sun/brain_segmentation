@@ -1,13 +1,22 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-labels = np.loadtxt('./labels.txt')
-values_1 = np.loadtxt('./values_1.txt')
-values_2 = np.loadtxt('./values_2.txt')
+my_model = np.load('./label_and_value.npz')
+com = np.load('./label_and_value_1.npz')
+labels = my_model['arr_0']
+values_1 = my_model['arr_1']
+values_2 = com['arr_1']
 y_pos = np.arange(len(labels))
 fig = plt.figure(figsize=(12, 8))
-plt.barh(y_pos, values_1, width=0.4, label="MY_result")
-plt.barh(y_pos+0.4, values_2, width=0.4, label="Original_result")
+
+width = 0.4
+
+plt.barh(y_pos, values_1, width, color='blue', label='MY_result')
+plt.barh(y_pos + width, values_2, width, color='green', label='Original_result')
+
+#ax.set(yticks=ind + width, yticklabels=df.graph, ylim=[2*width - 1, len(df)])
+plt.legend()
+
 plt.yticks(y_pos, labels)
 plt.xticks(np.arange(0.5, 1.0, 0.05))
 plt.xlabel('Dice coefficient', fontsize='x-large')
