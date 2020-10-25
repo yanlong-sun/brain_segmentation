@@ -1,65 +1,15 @@
-function [ slices, mask] = preprocessing3D( slices, mask, destination_path, prefix )
-%PREPROCESSING3D Implements preprocessing of a 3D volume containing slices 
-%of a FLAIR modality together with its segmentation mask. Needs a path to 
-%the folder (string) where you want to save the result and a filename 
-%prefix (string) to which a slice number is appended. The images will be 
-%saved in tiff format.
-%
-%Examples:
-%
-%   Basic usecase:
-%
-%       [slices, mask] = preprocessing3D(slices, mask, '/media/username/data/train/', 'patient_001');
-%   
-%   If you don't have a segmentation mask and want to preprocess test 
-%   images for inference, pass a zeros matrix instead:
-%
-%       [slices, mask] = preprocessing3D(slices, zeros(size(slices)), '/media/username/data/train/', 'patient_001');
+function [ slices, mask] = preprocessing3D( slices, mask, destination_path, prefix )   
 
 
-    slices = double(slices);
-    
     mask(mask ~= 0) = 1;
-
     % fill holes in segmentation mask
     for s = 1:size(mask, 3)
         mask(:, :, s) = imfill(mask(:, :, s), 'holes');
     end
-   
-    
-    
-    
-    
-    % get histogram of an image volume
-    [N, edges] = histcounts(slices(:), 'BinWidth', 2);
 
-    % rescale the intensity peak to be at value 100
-    minimum = edges(find(edges > prctile(slices(:), 2), 1));
-
-    diffN = zeros(size(N));
-    for nn = 2:numel(N)
-        diffN(nn) = N(nn) / N(nn - 1);
-    end
-    s = find(edges >= prctile(slices(:), 50), 1);
-    f = find(diffN(s:end) > 1.0, 5);
-    start = s + f(5);
-
-    [~, ind] = max(N(start:end));
-    peak_val = edges(ind + start - 1);
-    maximum = minimum + ((peak_val - minimum) * 2.55);
-
-    slices(slices < minimum) = minimum;
-    slices(slices > maximum) = maximum;
-    slices = (slices - minimum) ./ (maximum - minimum);
+    % fix the rage of pixel values after bicubic interpolation
+    slices(slices < 0) = 0;
  
-%     slices = rescale(slices, minimum, maximum);
-%     slices = slices / 255;
-
-    
-    
-    
-    
-    
     % save preprocessed images
     slices = im2uint8(slices);
     mask = 255 * (mask);
@@ -91,7 +41,8 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
         maskSlices = mask(:, :, startSlice:(startSlice + slicesPerImage - 1));
         
         figure(3)
-        imshow(imageSlices);
+        imshow(imageSlices)
+        
         saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '.tif']);
         saveastiff(maskSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '_mask.tif']);
     end
@@ -137,5 +88,3 @@ function [ image ] = center_crop( image, cropSize )
     image = image(i3_start:i3_stop, i4_start:i4_stop, :);
 
 end
-
-    

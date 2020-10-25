@@ -179,5 +179,6 @@ if __name__ == '__main__':
     # plot results
     plot_dc(labels, values)
 
-    np.savez('label_and_value.npz', labels, values)
+    np.savetxt('labels.txt', labels)
+    np.savez('values.npz', values)
 

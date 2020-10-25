@@ -1,20 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-my_model = np.load('./label_and_value.npz')
-com = np.load('./label_and_value_1.npz')
-labels = my_model['arr_0']
-values_1 = my_model['arr_1']
-values_2 = com['arr_1']
+my_model = np.load('./values.npz')
+com = np.load('./values_1.npz')
+labels = np.load('labels.txt')
+print(labels)
+values_1 = my_model['arr_0']
+values_2 = com['arr_0']
 y_pos = np.arange(len(labels))
 fig = plt.figure(figsize=(12, 8))
 
 width = 0.4
 
-plt.barh(y_pos, values_1, width, color='blue', label='MY_result')
-plt.barh(y_pos + width, values_2, width, color='green', label='Original_result')
-
-#ax.set(yticks=ind + width, yticklabels=df.graph, ylim=[2*width - 1, len(df)])
+plt.barh(y_pos, values_1, width, color='greenyellow', label='MY_result')
+plt.barh(y_pos + width, values_2, width, color='royalblue', label='Original_result')
 plt.legend()
 
 plt.yticks(y_pos, labels)
