@@ -53,34 +53,7 @@ for num_nii = 4 : length(slices_nii_file)
         [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, masks, destination_path, case_name);
         
 %% classify into two categories(2)
-    else
-        slices = double(slices);
-        % fix the rage of pixel values after bicubic interpolation
-        slices(slices < 0) = 0;
-
-        % get histogram of an image volume
-        [N, edges] = histcounts(slices(:), 'BinWidth', 2);
-
-        % rescale the intensity peak to be at value 100
-        minimum = edges(find(edges > prctile(slices(:), 2), 1));
-
-        diffN = zeros(size(N));
-        for nn = 2:numel(N)
-            diffN(nn) = N(nn) / N(nn - 1);
-        end
-        s = find(edges >= prctile(slices(:), 50), 1);
-        f = find(diffN(s:end) > 1.0, 5);
-        start = s + f(5);
-
-        [~, ind] = max(N(start:end));
-        peak_val = edges(ind + start - 1);
-        maximum = minimum + ((peak_val - minimum) * 2.55);
-
-        slices = rescale(slices, minimum, maximum);
-        slices = slices / 255;
-%         slices(slices < minimum) = minimum;
-%         slices(slices > maximum) = maximum;
-%         slices = (slices - minimum) ./ (maximum - minimum);
-        [slices_preprocessed, mask_preprocessed] = preprocessing3D(slices, masks, destination_path, case_name);  
+    else       
+        [slices_preprocessed, mask_preprocessed] = preprocessing(slices_tif, masks_tif, destination_path, case_name);  
     end 
 end

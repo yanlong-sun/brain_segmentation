@@ -2,19 +2,7 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
 
 
     mask(mask ~= 0) = 1;
-    % fill holes in segmentation mask
-    for s = 1:size(mask, 3)
-        mask(:, :, s) = imfill(mask(:, :, s), 'holes');
-    end
 
-    % fix the rage of pixel values after bicubic interpolation
-    slices(slices < 0) = 0;
- 
-    % save preprocessed images
-    slices = im2uint8(slices);
-    mask = 255 * (mask);
-
-    
     % resize to have smaller dimension equal 256 pixels
     if min(size(slices(:, :, 1))) ~= 256
 
@@ -25,12 +13,19 @@ function [ slices, mask] = preprocessing3D( slices, mask, destination_path, pref
         mask = imresize(mask, scale, 'method', 'nearest');
 
     end
-
+    
+     % fill holes in segmentation mask   
+    for s = 1:size(mask, 3)
+        mask(:, :, s) = imfill(mask(:, :, s), 'holes');
+    end
+ 
     % center crop to 256x256 square
     slices = center_crop(slices, [256 256]);
     mask = center_crop(mask, [256 256]);
     
-      
+    % save preprocessed images
+    slices = im2uint8(slices);
+    mask = 255 * (mask);  
     
     
     slicesPerImage = 1;
