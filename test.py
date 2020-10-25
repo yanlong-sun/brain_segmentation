@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
     # plot results
     plot_dc(labels, values)
-
+    labels = np.tostring(labels)
     np.savetxt('labels.txt', labels)
     np.savez('values.npz', values)
 

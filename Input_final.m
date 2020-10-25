@@ -54,6 +54,6 @@ for num_nii = 4 : length(slices_nii_file)
         
 %% classify into two categories(2)
     else       
-        [slices_preprocessed, mask_preprocessed] = preprocessing(slices_tif, masks_tif, destination_path, case_name);  
+        [slices_preprocessed, mask_preprocessed] = preprocessing(slices_tif, masks, destination_path, case_name);  
     end 
 end

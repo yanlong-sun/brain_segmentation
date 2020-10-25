@@ -69,7 +69,7 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
 
     % save preprocessed images
     slices = im2uint8(slices);
-    mask = im2uint8(mask);
+    mask = 255 * (mask); 
 
     slicesPerImage = 1;
 
