@@ -178,6 +178,4 @@ if __name__ == '__main__':
 
     # plot results
     plot_dc(labels, values)
-    np.savetxt('labels.txt', labels, fmt='%s')
-    np.savez('values.npz', values)
 
