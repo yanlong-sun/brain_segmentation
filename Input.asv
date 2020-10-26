@@ -1,9 +1,13 @@
 clc;
 clear;
 
-test_data_slices_nii_path = './data/nii_data/slices/';
-test_data_masks_nii_path = './data/nii_data/masks/';
-eas = 10000;
+
+
+% test_data_slices_nii_path = '../nii_data/slices/';
+% test_data_masks_nii_path = '../nii_data/masks/';
+
+test_data_slices_nii_path = '../training_data/slices/';
+test_data_masks_nii_path = '../training_data/masks/';
 
 slices_nii_folder=dir(test_data_slices_nii_path);
 slices_nii_file={slices_nii_folder.name};
@@ -109,7 +113,7 @@ function [] = save_preprocessed_images(slices, mask, destination_path, prefix )
     slices = im2uint8(slices);
     mask = 255 * (mask);      
     slicesPerImage = 1;
-    slice_number_long = 10000;
+    easy_sort = 10000;
     for s = size(slices, 3):-slicesPerImage:1
         startSlice = max([1, (s - slicesPerImage + 1)]);
         imageSlices = slices(:, :, startSlice:(startSlice + slicesPerImage - 1));
@@ -118,8 +122,8 @@ function [] = save_preprocessed_images(slices, mask, destination_path, prefix )
         figure(1)
         imshow(imageSlices)
         
-        saveastiff(imageSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '.tif']);
-        saveastiff(maskSlices, [destination_path prefix '_' num2str(slice_number_long + startSlice) '_mask.tif']);
+        saveastiff(imageSlices, [destination_path prefix '_' num2str(easy_sort + startSlice) '.tif']);
+        saveastiff(maskSlices, [destination_path prefix '_' num2str(easy_sort + startSlice) '_mask.tif']);
     end
 
 end

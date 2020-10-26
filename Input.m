@@ -1,10 +1,16 @@
 clc;
 clear;
 
-test_data_slices_nii_path = './data/nii_data/slices/';
-test_data_masks_nii_path = './data/nii_data/masks/';
+% Process training data -> add mask path
+% Process test data     -> uncomment 'masks_tif = zeros(size(slices_tif));'
 
-slices_nii_folder=dir(test_data_slices_nii_path);
+% test_data_slices_nii_path = '../nii_data/slices/';
+% test_data_masks_nii_path = '../nii_data/masks/';
+
+train_test_data_slices = '../valid_data/slices/';
+train_test_data_masks = '../valid_data/masks/';
+
+slices_nii_folder=dir(train_test_data_slices);
 slices_nii_file={slices_nii_folder.name};
 
 % Traverse all .nii.gz file
@@ -18,10 +24,13 @@ for num_nii = 4 : length(slices_nii_file)
     disp(finishing)
     disp(case_name)
     
-    v_slices = load_untouch_nii([test_data_slices_nii_path, case_name, '.nii.gz']);  
-    v_masks = load_untouch_nii([test_data_masks_nii_path, case_name, '.manual.mask.nii.gz']);
+    v_slices = load_untouch_nii([train_test_data_slices, case_name, '.nii.gz']);  
+    v_masks = load_untouch_nii([train_test_data_masks, case_name, '_ss.nii.gz']);
     slices_tif = v_slices.img;
     masks_tif = v_masks.img;
+    
+    %masks_tif = zeros(size(slices_tif));
+    
     [n1,n2,n3] = size(slices_tif);
 %% Save as tiff
     for i = 1 : n3 
@@ -38,7 +47,9 @@ for num_nii = 4 : length(slices_nii_file)
     
 %% 
     %destination_path = './data/test_model/';    % Get statistical results
-    destination_path = ['./data/test/', case_name, '/'];
+    destination_path = './data/valid/'; 
+    %destination_path = './data/valid/'; 
+    %destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
     if max(max(max(slices_tif))) > 1220
