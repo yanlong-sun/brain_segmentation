@@ -1,8 +1,8 @@
 # brain_segmentation
 
 Step_1:  run 'Input.m‘  
-			put all nii.gz file  in '../test_data'  
-			we could get test data in './data/test'  
+			put all nii.gz file  in '../test_data/'  
+			we could get test data in './data/test/'  
   
 Step_2:    'python pred.py'   in Google Colab (python == 2.x)  
   
