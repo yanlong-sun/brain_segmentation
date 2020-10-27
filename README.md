@@ -1,8 +1,8 @@
 # brain_segmentation
 
-Step_1:  run 'input_preprocessing‘  
-			put all nii.gz file  in '../test_data_nii'  
-			we could get test data in './data_test'  
+Step_1:  run 'Input.m‘  
+			put all nii.gz file  in '../test_data'  
+			we could get test data in './data/test'  
   
 Step_2:    'python pred.py'   
 			prediction  
