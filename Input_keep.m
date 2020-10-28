@@ -45,10 +45,10 @@ for num_nii = 4 : length(slices_nii_file)
     end
     
 %% 
-    %destination_path = './data/test_model/';    % Get statistical results
+    destination_path = './data/test_model/';    % Get qualitative results
     %destination_path = './data/valid/'; 
-    %destination_path = './data/valid/'; 
-    destination_path = ['./data/test/', case_name, '/'];
+    %destination_path = './data/train/'; 
+    %destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
     if max(max(max(slices_tif))) > 1220
