@@ -11,24 +11,26 @@ slices_nii_folder=dir(train_test_data_slices);
 slices_nii_file={slices_nii_folder.name};
 
 % Traverse all .nii.gz file
-for num_nii = 4 : length(slices_nii_file)
+for num_nii = 10 : length(slices_nii_file)
     
     case_name = slices_nii_file(num_nii);
     case_name = char(case_name);
     case_name = case_name(1 : end-7);
     
     finishing = [num2str(num_nii-3),'/',num2str(length(slices_nii_file)-3)];
-    disp(finishing)
-    disp(case_name)
+     disp(finishing)
+     disp(case_name)
     
     v_slices = load_untouch_nii([train_test_data_slices, case_name, '.nii.gz']);  
-    v_masks = load_untouch_nii([train_test_data_masks, case_name, '_ss.nii.gz']);
+    v_masks = load_untouch_nii([train_test_data_masks, case_name, '.manual.mask.nii.gz']);
     slices_tif = v_slices.img;
     masks_tif = v_masks.img;
     
     %masks_tif = zeros(size(slices_tif));
     
     [n1,n2,n3] = size(slices_tif);
+    
+
 %% Save as tiff
     for i = 1 : n3 
         if i == 1
