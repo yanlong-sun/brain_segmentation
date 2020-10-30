@@ -11,7 +11,7 @@ slices_nii_folder=dir(train_test_data_slices);
 slices_nii_file={slices_nii_folder.name};
 
 % Traverse all .nii.gz file
-for num_nii = 10 : length(slices_nii_file)
+for num_nii = 4 : length(slices_nii_file)
     
     case_name = slices_nii_file(num_nii);
     case_name = char(case_name);
@@ -45,32 +45,28 @@ for num_nii = 10 : length(slices_nii_file)
     end
     
 %% 
-    %destination_path = './data/test_model/';    % Get statistical results
+    %destination_path = './data/test_model/';    % Get qualitative results
     %destination_path = './data/valid/'; 
-    %destination_path = './data/valid/'; 
+    %destination_path = './data/train/'; 
     destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
     if max(max(max(slices_tif))) > 1220
-        [slices_preprocessed, mask_preprocessed] = preprocessing_high(slices, masks, destination_path, case_name);
+        [slices_preprocessed, mask_preprocessed] = preprocessing_high(slices, masks, destination_path, case_name, n1, n2, n3);
     else       
-        [slices_preprocessed, mask_preprocessed] = preprocessing(slices_tif, masks, destination_path, case_name);  
+        [slices_preprocessed, mask_preprocessed] = preprocessing(slices_tif, masks, destination_path, case_name, n1, n2, n3);  
     end 
 end
 
 
 %% functions
-function [ slices, mask] = preprocessing_high( slices, mask, destination_path, prefix )      
-    [slices, mask] = get_proper_size(slices, mask);
-    save_preprocessed_images(slices, mask, destination_path, prefix );
+function [ slices, mask] = preprocessing_high(slices, mask, destination_path, prefix, n1, n2, n3 )      
+    save_preprocessed_images(slices, mask, destination_path, prefix, n1, n2, n3);
 end
 
-function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix )      
-    [slices, mask] = get_proper_size(slices, mask);
+function [slices, mask] = preprocessing(slices, mask, destination_path, prefix, n1, n2, n3 )      
     slices = double(slices);
-    % fix the rage of pixel values after bicubic interpolation
-    slices(slices < 0) = 0;
-
+    slices = rescale(slices, 0, 255);
     % get histogram of an image volume
     [N, edges] = histcounts(slices(:), 'BinWidth', 2);
 
@@ -92,31 +88,21 @@ function [ slices, mask] = preprocessing( slices, mask, destination_path, prefix
     slices(slices < minimum) = minimum;
     slices(slices > maximum) = maximum;
     slices = (slices - minimum) ./ (maximum - minimum);
-    
-    save_preprocessed_images(slices, mask, destination_path, prefix );
-end
-
-function [slices, mask] = get_proper_size(slices, mask)
-    mask(mask ~= 0) = 1;
-    if min(size(slices(:, :, 1))) ~= 256
-        scale = 256 / max(size(slices(:,:,1)));
-        slices = imresize(slices, scale);
-        mask = imresize(mask, scale, 'method', 'nearest');
-    end  
-    for s = 1:size(mask, 3)
-        mask(:, :, s) = imfill(mask(:, :, s), 'holes');
-    end
+    save_preprocessed_images(slices, mask, destination_path, prefix, n1, n2, n3);
 end
 
 
-function [] = save_preprocessed_images(slices, mask, destination_path, prefix )
 
-% center crop to 256x256 square
-    slices = center_crop(slices, [256 256]);
-    mask = center_crop(mask, [256 256]);
+function [] = save_preprocessed_images(slices, mask, destination_path, prefix, n1, n2, n3)
+
 % save preprocessed images
     slices = im2uint8(slices);
-    mask = 255 * (mask);      
+    mask = 255 * (mask);
+ % center crop to 256x256 square
+    slices = center_crop(slices, n1, n2, n3);
+    mask = center_crop(mask, n1, n2, n3);   
+    
+    
     slicesPerImage = 1;
     easy_sort = 10000;
     for s = size(slices, 3):-slicesPerImage:1
@@ -134,34 +120,35 @@ function [] = save_preprocessed_images(slices, mask, destination_path, prefix )
 end
 
 
-function [ image ] = center_crop( image, cropSize )
-%CENTER_CROP Center crop of given size
-    image_size = size(image);
-    if image_size(1) > image_size(2)+60
-        image = padarray(image,[0,80],'post');
-        image = padarray(image,[0,80],'pre');
+function [ image ] = center_crop(image, n1, n2, n3)
+    num_pad_n1 = 256-n1;
+    num_pad_n2 = 256-n2; 
+    
+    num_pad_n1_half = round(num_pad_n1/2);
+    num_pad_n2_half = round(num_pad_n2/2);
+    
+    if and(n1<256, n2<256)
+        image = padarray(image, [num_pad_n1_half, 0], 'pre');
+        image = padarray(image, [num_pad_n1 - num_pad_n1_half, 0 ], 'post');
+        image = padarray(image, [0, num_pad_n2_half], 'pre');  
+        image = padarray(image, [0, num_pad_n2 - num_pad_n2_half], 'post');
+        
     end
     
-    if and(image_size(2) < image_size(1)+60, image_size(2) > image_size(1))
-        image = padarray(image,[50,0],'post');
-        image = padarray(image,[50,0],'pre');
+    if and(n1<256, n2>=256)
+        image = padarray(image, [num_pad_n1_half, 0 ], 'pre');
+        image = padarray(image, [num_pad_n1 - num_pad_n1_half, 0 ], 'post');  
     end
     
-    if and(image_size(1) < image_size(2)+60, image_size(1) > image_size(2))
-        image = padarray(image,[0,50],'post');
-        image = padarray(image,[0,50],'pre');
+    if and(n1>=256, n2<256)
+        image = padarray(image, [0, num_pad_n2_half], 'pre');  
+        image = padarray(image, [0, num_pad_n2 - num_pad_n2_half], 'post');  
     end
-    
-    if image_size(2) > image_size(1)+60
-        image = padarray(image,[80,8],'post');
-        image = padarray(image,[80,8],'pre');     
-    end   
-    [p3, p4, ~] = size(image);
-    i3_start = max(1, floor((p3 - cropSize(1)) / 2));
-    i3_stop = i3_start + cropSize(1) - 1;
-    i4_start = max(1, floor((p4 - cropSize(2)) / 2));
-    i4_stop = i4_start + cropSize(2) - 1;
-    image = image(i3_start:i3_stop, i4_start:i4_stop, :);
 
+    image_size = size(image);
+    if or(image_size(1)>256, image_size(2)>256)
+        win1 = centerCropWindow3d(size(image), [256,256, n3]);
+        image = imcrop3(image, win1);  
+    end
 end
 
