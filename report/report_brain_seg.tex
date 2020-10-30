@@ -27,7 +27,7 @@ In this experiment, we replicated a deep learning model with the U-Net architect
 The image data we used in this experiment is Calgary-Campinas-359 \cite{dataset}(CC-359) dataset. Firstly, we rescale the intensity peak of the slices to get better contrast. After that, in oder to make slices and masks have size of 256*256 to be calculated by the deep neural network. We padded zeros to slices and masks according to the orientation of the them.  
 
 \subsection{Segmentation}
-We kept the structure of the original model but retrained the model. After training on CC0001-CC0030 of CC-359, about 7000 slices, we got the Average Dice coefficient of 92.3\% on 18 test subjects.
+We kept the structure of the original model but retrained the model. After training on CC0001-CC0030 of CC-359, about 7000 slices, we got the Average Dice coefficient of 92.87\% on 18 test subjects.
 
 \subsection{Postprocessing}
 After predicting by the trained model, we got the prediction information in the 'mat' format. Then, we added these slices and predicted masks up respectively and convert them back to '.nii.gz' file.
