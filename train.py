@@ -28,7 +28,9 @@ base_lr = 1e-5
 
 
 def train():
-    imgs_train, imgs_mask_train, _ = load_data(train_images_path)
+    imgs_train, imgs_mask_train, names = load_data(train_images_path)
+
+    print(names)
 
     mean = np.mean(imgs_train)
     std = np.std(imgs_train)
@@ -36,7 +38,8 @@ def train():
     imgs_train -= mean
     imgs_train /= std
 
-    imgs_valid, imgs_mask_valid, _ = load_data(valid_images_path)
+    imgs_valid, imgs_mask_valid, names = load_data(valid_images_path)
+    print(names)
 
     imgs_valid -= mean
     imgs_valid /= std

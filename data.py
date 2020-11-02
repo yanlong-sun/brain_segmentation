@@ -14,7 +14,6 @@ channels = 3    # refers to neighboring slices; if set to 3, takes previous and 
 modalities = 1  # refers to pre, flair and post modalities; if set to 3, uses all and if set to 1, only flair
 
 
-
 def load_data(path):
     """
     Assumes filenames in given path to be in the following format as defined in `preprocessing3D.m`:
@@ -40,6 +39,7 @@ def load_data(path):
     for image_name in images_list:
         if 'mask' in image_name:
             continue
+
         names[i] = image_name.split('.')[0]
         slice_number = int(names[i].split('_')[-1])
         patient_id = '_'.join(names[i].split('_')[:-1])
@@ -47,8 +47,6 @@ def load_data(path):
         image_mask_name = image_name.split('.')[0] + '_mask.tif'
         img = imread(os.path.join(path, image_name), as_grey=(modalities == 1))
         img_mask = imread(os.path.join(path, image_mask_name), as_grey=True)
-
-
 
         if channels > 1:
             img_prev = read_slice(path, patient_id, slice_number - 1)
