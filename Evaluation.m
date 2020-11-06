@@ -1,63 +1,60 @@
 clc;
 clear;
-%% evaluate deep learning model
+%% Evaluate deep learning model
 prediction_path = '../predictions/';
 pred_folder= dir(prediction_path);
 pred_file={pred_folder.name};
 dice_coef_dl = zeros(1, length(pred_file)-3);
-case_name_list = zeros(1, length(pred_file)-3);
+case_name_list = string(pred_file(4:length(pred_file)));
 for num_pred= 4 : length(pred_file)
     case_name = pred_file(num_pred);
     case_name = char(case_name);
-    finishing = [num2str(num_pred-3),'/',num2str(length(pred_file)-3)];
-    disp(finishing)
-    disp(case_name)
     mat = load([prediction_path, case_name, '/predictions.mat']);
-    mask = mat.mask;
-    pred = mat.pred;
-    [~, ~, n3] = size(mask);
-    dice = 0;
-    for i = 1 : n3
-        imshow(pred(:,:,i))
-        dice_single = dice(mask(:,:,i), pred(:,:,i));
-        dice = dice + dice_single;
-    end
-    dice = dice/n3;
+    mask = logical(mat.mask);
+    pred = logical(mat.pred);   
+    dice =  2*nnz(mask&pred)/(nnz(mask) + nnz(pred));
     dice_coef_dl(num_pred-3) = dice;
-    case_name_list(num_pred-3) = case_name;
-end
 
-%% evaluate brainsuite
+end
+    dice_dl_avg = mean(dice_coef_dl)
+    
+% Evaluate brainsuite
 prediction_path = '../predictions_brainsuite/';
+masks_path = '../test_data/masks/';
 pred_folder= dir(prediction_path);
 pred_file={pred_folder.name};
 dice_coef_bse = zeros(1, length(pred_file)-3);
 for num_pred= 4 : length(pred_file)
     case_name = pred_file(num_pred);
-    case_name = char(case_name);
-    finishing = [num2str(num_pred-3),'/',num2str(length(pred_file)-3)];
-    disp(finishing)
-    disp(case_name)
-    mat = load([prediction_path, case_name, '/predictions.mat']);
-    mask = mat.mask;
-    pred = mat.pred;
-    [~, ~, n3] = size(mask);
-    dice = 0;
-    for i = 1 : n3
-        imshow(pred(:,:,i))
-        dice_single = dice(mask(:,:,i), pred(:,:,i));
-        dice = dice + dice_single;
-    end
-    dice = dice/n3;
+    case_name = char(case_name);   
+    preds_nii = load_untouch_nii([prediction_path, case_name, '/',case_name, '.mask.nii.gz']);  
+    masks_nii = load_untouch_nii([masks_path, case_name, '.manual.mask.nii.gz']);
+    pred = logical(preds_nii.img);
+    mask = logical(masks_nii.img);
+    dice =  2*nnz(mask&pred)/(nnz(mask) + nnz(pred));
     dice_coef_bse(num_pred-3) = dice;
 end
-
+    dice_bse_avg = mean(dice_coef_bse)
 
 
 %% plot
-x = case_name_list;
-y = [dice_coef_dl; dice_coef_bse]';
-barh(x,y)
-xlabel('Case Name')
-ylabel('Dice Coefficient')
-lengend({'Deep Learning Model', 'Brainsuite'})
+figure(1)
+x = cat(2, dice_coef_dl', dice_coef_bse');
+y = categorical({'1663535','5235HD','5254HD','5260HD','5325HD','5359HD','5377HD', '5444HD','E108','MPRAGE_high_res1', 'MPRAGE_high_res_lowered_res_fewvox','OAS1_0061_MR1_mpr_n4_anon_sbj_111_RAS','OAS1_0061_MR2_mpr_n4_anon_sbj_111_RAS','brainsuite_subj1_m6', 'sub00440','sub01018 ','sub1_T1w_acpc_dc','sub2_T1w_acpc_dc' });
+
+% y = case_name_list;
+barh(y, x)
+
+xlabel('Dice Coefficient')
+xlim([0.7, 1])
+ylabel('Case Name')
+xlabel('y','fontsize',10);
+legend({'Deep Learning Model', 'Brainsuite'})
+grid on;
+ylim=get(gca,'Ylim');
+hold on
+p = plot([dice_dl_avg,dice_dl_avg],ylim, '--');
+set(p,'Color','blue')
+hold on
+l = plot([dice_bse_avg,dice_bse_avg],ylim, '--');
+set(l,'Color','red')
