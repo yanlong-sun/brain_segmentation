@@ -26,7 +26,7 @@ The code is for the report [U-Net Based Brain Segmentation](https://github.com/y
 	```
   	! python train.py   
 	```
-*  Our weights get from training on  "CC-359"      CC0001 - CC0030   
+*  We got `weights_128.h5` from training on  "CC-359"      CC0001 - CC0030   
 	  	
 		  
 
