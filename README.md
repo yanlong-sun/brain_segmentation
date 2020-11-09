@@ -24,18 +24,18 @@ The code is for the report [U-Net Based Brain Segmentation](https://github.com/y
   
 -  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)   
 	```
-  	! python pred.py   
+  	! python train.py   
 	```
 *  Our weights get from training on  "CC-359"      CC0001 - CC0030   
 	  	
 		  
 
-##Results
+## Results
 Here we show some outputs and qualitative results of our test subjects.
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/1.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/2.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/3.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/DSC.png)
 
-##Image data
+## Image data
 `https://sites.google.com/view/calgary-campinas-dataset/download?authuser=0`
