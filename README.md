@@ -38,4 +38,4 @@ Here we show some outputs and qualitative results of our test subjects.
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/DSC.png)
 
 ## Image data
-`https://sites.google.com/view/calgary-campinas-dataset/download?authuser=0`
+[Calgary-Campinas-359 (CC-359) dataset](https://sites.google.com/view/calgary-campinas-dataset/download?authuser=0)
