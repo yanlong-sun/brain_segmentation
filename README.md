@@ -1,38 +1,40 @@
 # U-Net Based Brain Segmentation
 
+The code is for the report [U-Net Based Brain Segmentation](https://github.com/yanlong-sun/brain_segmentation/blob/master/Report.pdf)
+
 ## Usage 
-### Predicting
--  Run `Input.m`
-     `../test_data/`  -  folder of original 'nii.gz' files  
-     `./data/test/`    -  folder of preprocessed slices
+### Predicting  
+-  Run `Input.m`    
+     `../test_data/`  -  folder of original 'nii.gz' files    
+     `./data/test/`    -  folder of preprocessed slices   
   
--  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)  
+-  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)    
 	```
   	! python pred.py 
 	```
--  Run `save_result_256.m`
-	`./predictions` -  folder of prediction
+-  Run `save_result_256.m`  
+	`./predictions` -  folder of prediction  
   
 ### Training model
--  Run `Input.m`
-     `../training_data/`  -  folder of original 'nii.gz' files  
-     `../valid_data/`  -  folder of original 'nii.gz' files 
-     `./data/train/`    -  folder of preprocessed slices
-     `./data/valid/`    -  folder of preprocessed slices
+-  Run `Input.m`  
+     `../training_data/`  -  folder of original 'nii.gz' files   
+     `../valid_data/`  -  folder of original 'nii.gz' files   
+     `./data/train/`    -  folder of preprocessed slices  
+     `./data/valid/`    -  folder of preprocessed slices  
   
--  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)  
+-  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)   
 	```
-  	! python pred.py 
+  	! python pred.py   
 	```
-*  Our weights get from training on  "CC-359"      CC0001 - CC0030  
+*  Our weights get from training on  "CC-359"      CC0001 - CC0030   
 	  	
 		  
 
 ##Results
 Here we show some outputs and qualitative results of our test subjects.
-![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/Screen%20Shot%202020-10-27%20at%2014.24.37.png)
-![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/Screen%20Shot%202020-10-27%20at%2014.28.23.png)
-![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/screen%20shot.png)
+![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/1.png)
+![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/2.png)
+![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/3.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/DSC.png)
 
 ##Image data
