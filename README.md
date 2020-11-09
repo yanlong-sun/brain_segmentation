@@ -1,6 +1,6 @@
 # U-Net Based Brain Segmentation
 
-The code is for the report [U-Net Based Brain Segmentation](https://github.com/yanlong-sun/brain_segmentation/blob/master/Report.pdf)
+Report link [U-Net Based Brain Segmentation](https://github.com/yanlong-sun/brain_segmentation/blob/master/Report.pdf)
 
 ## Usage 
 ### Predicting  
