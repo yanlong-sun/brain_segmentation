@@ -40,21 +40,21 @@ end
 %% plot
 figure(1)
 x = cat(2, dice_coef_dl', dice_coef_bse');
-y = categorical({'1663535','5235HD','5254HD','5260HD','5325HD','5359HD','5377HD', '5444HD','E108','MPRAGE_high_res1', 'MPRAGE_high_res_lowered_res_fewvox','OAS1_0061_MR1_mpr_n4_anon_sbj_111_RAS','OAS1_0061_MR2_mpr_n4_anon_sbj_111_RAS','brainsuite_subj1_m6', 'sub00440','sub01018 ','sub1_T1w_acpc_dc','sub2_T1w_acpc_dc' });
+% y = categorical({'1663535','5235HD','5254HD','5260HD','5325HD','5359HD','5377HD', '5444HD','E108','MPRAGE_high_res1', 'MPRAGE_high_res_lowered_res_fewvox','OAS1_0061_MR1_mpr_n4_anon_sbj_111_RAS','OAS1_0061_MR2_mpr_n4_anon_sbj_111_RAS','brainsuite_subj1_m6', 'sub00440','sub01018 ','sub1_T1w_acpc_dc','sub2_T1w_acpc_dc' });
 
-% y = case_name_list;
+y = categorical(case_name_list);
 barh(y, x)
-
+set(gca,'FontSize',9);
 xlabel('Dice Coefficient')
 xlim([0.7, 1])
 ylabel('Case Name')
-xlabel('y','fontsize',10);
-legend({'Deep Learning Model', 'Brainsuite'})
+xlabel('Dice Coefficient');
 grid on;
+ax = gca;
+ax.LineWidth = 2;
 ylim=get(gca,'Ylim');
-hold on
-p = plot([dice_dl_avg,dice_dl_avg],ylim, '--');
-set(p,'Color','blue')
-hold on
-l = plot([dice_bse_avg,dice_bse_avg],ylim, '--');
-set(l,'Color','red')
+line([dice_dl_avg, dice_dl_avg], ylim, 'Color','blue','LineStyle','--', 'LineWidth',2 );
+line([dice_bse_avg, dice_bse_avg], ylim, 'Color','red','LineStyle','--', 'LineWidth',2 );
+text(dice_dl_avg, ylim(2), num2str(dice_dl_avg), 'color','b');
+text(dice_bse_avg, ylim(2), num2str(dice_bse_avg), 'color','r');
+legend({'U-Net', 'Brainsuite', 'Avg DSC for UNet', 'Avg DSC for brainsuite'});

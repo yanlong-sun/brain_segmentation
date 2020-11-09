@@ -1,22 +1,39 @@
-# brain_segmentation
+# U-Net Based Brain Segmentation
 
-Step_1:  run 'Input.m‘  
-			put all nii.gz file  in '../test_data/'  
-			we could get test data in './data/test/'  
+## Usage 
+### Predicting
+-  Run `Input.m`
+     `../test_data/`  -  folder of original 'nii.gz' files  
+     `./data/test/`    -  folder of preprocessed slices
   
-Step_2:    'python pred.py'   in Google Colab (python == 2.x)  
+-  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)  
+	```
+  	! python pred.py 
+	```
+-  Run `save_result_256.m`
+	`./predictions` -  folder of prediction
   
-Step_3:  run 'save_result_256.m'  
-			convert .mat format back to .nii  
-			we can get the result in './predictions'  
+### Training model
+-  Run `Input.m`
+     `../training_data/`  -  folder of original 'nii.gz' files  
+     `../valid_data/`  -  folder of original 'nii.gz' files 
+     `./data/train/`    -  folder of preprocessed slices
+     `./data/valid/`    -  folder of preprocessed slices
   
-  
+-  Open `brain_segmentation.ipynb` In Google Colaboratory (python == 2.x)  
+	```
+  	! python pred.py 
+	```
+*  Our weights get from training on  "CC-359"      CC0001 - CC0030  
 	  	
 		  
-* trained on  "CC-359"      CC0001 - CC0030  
 
+##Results
 Here we show some outputs and qualitative results of our test subjects.
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/Screen%20Shot%202020-10-27%20at%2014.24.37.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/Screen%20Shot%202020-10-27%20at%2014.28.23.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/screen%20shot.png)
 ![image](https://github.com/yanlong-sun/brain_segmentation/blob/master/report/DSC.png)
+
+##Image data
+`https://sites.google.com/view/calgary-campinas-dataset/download?authuser=0`
