@@ -12,7 +12,7 @@ The code is for the report [U-Net Based Brain Segmentation](https://github.com/y
 	```
   	! python pred.py 
 	```
--  Run `save_result_256.m`  
+-  Run `save_result.m`  
 	`./predictions` -  folder of prediction  
   
 ### Training model
