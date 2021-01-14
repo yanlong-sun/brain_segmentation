@@ -3,8 +3,8 @@ clear;
 
 % Process training data -> add mask path
 % Process test data     -> uncomment 'masks_tif = zeros(size(slices_tif));'
-train_test_data_slices = '../test_data/slices/';
-train_test_data_masks = '../test_data/masks/';
+train_test_data_slices = '../training_data/slices/';
+train_test_data_masks = '../training_data/masks/';
 
 % train_test_data_slices = '../valid_data/slices/';
 % train_test_data_masks = '../valid_data/masks/';
@@ -24,8 +24,8 @@ for num_nii = 4 : length(slices_nii_file)
      disp(case_name)
     
     v_slices = load_untouch_nii([train_test_data_slices, case_name, '.nii.gz']);  
-    v_masks = load_untouch_nii([train_test_data_masks, case_name, '.manual.mask.nii.gz']);
-    %v_masks = load_untouch_nii([train_test_data_masks, case_name, '_ss.nii.gz']);
+    %v_masks = load_untouch_nii([train_test_data_masks, case_name, '.manual.mask.nii.gz']);
+    v_masks = load_untouch_nii([train_test_data_masks, case_name, '_ss.nii.gz']);
     slices_tif = v_slices.img;
     masks_tif = v_masks.img;
     
@@ -50,8 +50,8 @@ for num_nii = 4 : length(slices_nii_file)
 %% 
     %destination_path = './data/test_model/';    % Get qualitative results
     %destination_path = './data/valid/'; 
-    %destination_path = './data/train/'; 
-    destination_path = ['./data/test/', case_name, '/'];
+    destination_path = './data/train/'; 
+    %destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
     if max(max(max(slices_tif))) > 1220
