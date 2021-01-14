@@ -16,10 +16,10 @@ def data_aug():
     aug_imgs_mask_train = seq.augment_images(imgs_mask_train)
     b, c = 1, 1
     for each in aug_imgs_train:
-        cv2.imwrite(aug_training_image_path, '%s_mask.tif', b, each)
+        cv2.imwrite(aug_training_image_path, name, '%s_mask.tif', b, each)
         b += 1
     for each in aug_imgs_mask_train:
-        cv2.imwrite(aug_training_image_path, '%s.tif', c, each)
+        cv2.imwrite(aug_training_image_path, name,  '%s.tif', c, each)
         c += 1
 
 if __name__ == '__main__':
