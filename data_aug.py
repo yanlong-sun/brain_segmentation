@@ -1,7 +1,7 @@
 import cv2
 from imgaug import augmenters as iaa
 def data_aug():
-    seq = iss.Sequential(
+    seq = iaa.Sequential(
         [
             iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255), per_channel=0.5),
             iaa.Sharpen(alpha=(0, 0.3), lightness=(0.9, 1.1))
