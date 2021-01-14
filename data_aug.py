@@ -1,5 +1,6 @@
 import cv2
 from imgaug import augmenters as iaa
+from data import *
 def data_aug():
     seq = iaa.Sequential(
         [
