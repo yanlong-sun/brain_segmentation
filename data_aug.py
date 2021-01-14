@@ -11,7 +11,7 @@ def data_aug():
 
     unaug_training_image_path = './data/train/'
     aug_training_image_path = './data/aug_train/'
-    imgs_train, imgs_mask_train, names = load_data(unaug_train_images_path)
+    imgs_train, imgs_mask_train, names = load_data(unaug_training_image_path)
     print(names)
     """
     aug_imgs_train = seq.augment_images(imgs_train)
