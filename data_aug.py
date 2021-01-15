@@ -19,8 +19,8 @@ def data_aug():
             iaa.ElasticTransformation(alpha=50, sigma=5)
         ], random_order=True
     )
-    n = 4
-    training_image_path = './data/train/'
+    n = 3
+    training_image_path = './data/valid/'
     images_list = os.listdir(training_image_path)
     for image_name in images_list:
         if 'mask' in image_name:
