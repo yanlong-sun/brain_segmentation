@@ -3,11 +3,11 @@ clear;
 
 % Process training data -> add mask path
 % Process test data     -> uncomment 'masks_tif = zeros(size(slices_tif));'
-train_test_data_slices = '../training_data/slices/';
-train_test_data_masks = '../training_data/masks/';
+% train_test_data_slices = '../training_data/slices/';
+% train_test_data_masks = '../training_data/masks/';
 
-% train_test_data_slices = '../valid_data/slices/';
-% train_test_data_masks = '../valid_data/masks/';
+train_test_data_slices = '../valid_data/slices/';
+train_test_data_masks = '../valid_data/masks/';
 
 slices_nii_folder=dir(train_test_data_slices);
 slices_nii_file={slices_nii_folder.name};
@@ -49,8 +49,8 @@ for num_nii = 4 : length(slices_nii_file)
     
 %% 
     %destination_path = './data/test_model/';    % Get qualitative results
-    %destination_path = './data/valid/'; 
-    destination_path = './data/train2/'; 
+    destination_path = './data/valid/'; 
+    %destination_path = './data/train/'; 
     %destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
