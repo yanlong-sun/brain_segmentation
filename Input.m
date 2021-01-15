@@ -50,7 +50,7 @@ for num_nii = 4 : length(slices_nii_file)
 %% 
     %destination_path = './data/test_model/';    % Get qualitative results
     %destination_path = './data/valid/'; 
-    destination_path = './data/train/'; 
+    destination_path = './data/train2/'; 
     %destination_path = ['./data/test/', case_name, '/'];
      
 %% classify into two categories    
